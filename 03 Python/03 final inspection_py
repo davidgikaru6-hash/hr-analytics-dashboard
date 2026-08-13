@@ -1,0 +1,15 @@
+from pathlib import Path
+import pandas as pd
+from data_quality_inspector import inspect
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+CLEAN_DATA = (
+    BASE_DIR /
+    "02 Cleaned Data" /
+    "HR Analytics_Cleaned.csv"
+)
+
+df = pd.read_csv(CLEAN_DATA)
+
+inspect(df)

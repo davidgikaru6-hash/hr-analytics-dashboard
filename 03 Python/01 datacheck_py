@@ -1,0 +1,19 @@
+from pathlib import Path
+import pandas as pd
+from data_quality_inspector import inspect
+
+# Project root folder
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Raw HR dataset
+RAW_DATA = BASE_DIR / "01 Raw Data" / "HR Analytics project.csv"
+
+# Load dataset
+df = pd.read_csv(RAW_DATA)
+
+# Inspect data quality
+inspect(df)
+
+print("Dataset Loaded Successfully")
+
+print(df.shape)

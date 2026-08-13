@@ -1,0 +1,146 @@
+from pathlib import Path
+import pandas as pd
+
+# ============================
+# LOAD DATA
+# ============================
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+CLEAN_DATA = (
+    BASE_DIR /
+    "02 Cleaned Data" /
+    "HR Analytics_Cleaned.csv"
+)
+
+df = pd.read_csv(CLEAN_DATA)
+
+print("\nHR ANALYTICS DATA LOADED")
+print("-" * 40)
+print(f"Rows: {df.shape[0]:,}")
+print(f"Columns: {df.shape[1]}")
+
+# ============================
+# OVERTIME VS ATTRITION
+# ============================
+
+analysis = (
+    df.groupby("OverTime")
+      .agg(
+          Total_Employees=("EmployeeNumber", "count"),
+          Employees_Left=("Attrition_Num", "sum")
+      )
+)
+
+analysis["Attrition_Rate_%"] = (
+    analysis["Employees_Left"]
+    / analysis["Total_Employees"]
+    * 100
+).round(2)
+
+print("\nOVERTIME VS ATTRITION")
+print("-" * 40)
+print(analysis)
+
+# ============================
+# MONTHLY INCOME VS ATTRITION
+# ============================
+
+income_analysis = (
+    df.groupby("Attrition")
+    .agg(
+        Employees=("EmployeeNumber","count"),
+        Average_Income=("MonthlyIncome","mean"),
+        Median_Income=("MonthlyIncome","median"),
+        Minimum_Income=("MonthlyIncome","min"),
+        Maximum_Income=("MonthlyIncome","max")
+    )
+    .round(2)
+)
+
+
+print("\nMONTHLY INCOME VS ATTRITION")
+print("="*50)
+
+print(income_analysis)
+
+# ============================
+# JOB SATISFACTION VS ATTRITION
+# ============================
+
+satisfaction_analysis = (
+    df.groupby("Attrition")
+    .agg(
+        Employees=("EmployeeNumber","count"),
+        Average_Job_Satisfaction=("JobSatisfaction","mean"),
+        Average_Environment_Satisfaction=("EnvironmentSatisfaction","mean"),
+        Average_Relationship_Satisfaction=("RelationshipSatisfaction","mean")
+    )
+    .round(2)
+)
+
+
+print("\nSATISFACTION VS ATTRITION")
+print("="*50)
+
+print(satisfaction_analysis)
+
+# ============================
+# DISTANCE FROM HOME VS ATTRITION
+# ============================
+
+distance_analysis = (
+    df.groupby("Attrition")
+    .agg(
+        Employees=("EmployeeNumber","count"),
+        Average_Distance=("DistanceFromHome","mean"),
+        Maximum_Distance=("DistanceFromHome","max")
+    )
+    .round(2)
+)
+
+
+print("\nDISTANCE FROM HOME VS ATTRITION")
+print("="*50)
+
+print(distance_analysis)
+
+# ============================
+# AGE VS ATTRITION
+# ============================
+
+df["Age_Group"] = pd.cut(
+    df["Age"],
+    bins=[17,25,35,45,55,100],
+    labels=[
+        "18-25",
+        "26-35",
+        "36-45",
+        "46-55",
+        "56+"
+    ]
+)
+
+
+age_analysis = (
+    df.groupby("Age_Group")
+    .agg(
+        Employees=("EmployeeNumber","count"),
+        Employees_Left=("Attrition_Num","sum")
+    )
+)
+
+
+age_analysis["Attrition_Rate_%"] = (
+    age_analysis["Employees_Left"]
+    /
+    age_analysis["Employees"]
+    *
+    100
+).round(2)
+
+
+print("\nAGE VS ATTRITION")
+print("="*50)
+
+print(age_analysis)

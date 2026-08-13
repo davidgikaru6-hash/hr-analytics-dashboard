@@ -1,0 +1,274 @@
+from pathlib import Path
+import pandas as pd
+
+# ==============================
+# PROJECT PATHS
+# ==============================
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+CLEAN_DATA = BASE_DIR / "02 Cleaned Data" / "HR Analytics_Cleaned.csv"
+
+OUTPUT_DIR = BASE_DIR / "05 Dashboard Data"
+OUTPUT_DIR.mkdir(exist_ok=True)
+
+OUTPUT_FILE = OUTPUT_DIR / "Dashboard_Data.xlsx"
+
+# ==============================
+# LOAD DATA
+# ==============================
+
+df = pd.read_csv(CLEAN_DATA)
+
+print("=" * 60)
+print("HR ANALYTICS DATA LOADED")
+print("=" * 60)
+print(f"Rows    : {df.shape[0]:,}")
+print(f"Columns : {df.shape[1]}")
+
+# ==============================
+# EXECUTIVE KPIs
+# ==============================
+
+total_employees = len(df)
+
+employees_left = (df["Attrition"] == "Yes").sum()
+
+active_employees = (df["Attrition"] == "No").sum()
+
+attrition_rate = (employees_left / total_employees) * 100
+
+average_income = df["MonthlyIncome"].mean()
+
+overtime_rate = (df["OverTime"] == "Yes").mean() * 100
+
+average_job_satisfaction = df["JobSatisfaction"].mean()
+
+average_work_life = df["WorkLifeBalance"].mean()
+
+average_years = df["YearsAtCompany"].mean()
+
+kpis = pd.DataFrame({
+
+"KPI":[
+"Total Employees",
+"Active Employees",
+"Employees Left",
+"Attrition Rate %",
+"Average Monthly Income",
+"Overtime Rate %",
+"Average Job Satisfaction",
+"Average Work-Life Balance",
+"Average Years at Company"
+],
+
+"Value":[
+total_employees,
+active_employees,
+employees_left,
+round(attrition_rate,2),
+round(average_income,2),
+round(overtime_rate,2),
+round(average_job_satisfaction,2),
+round(average_work_life,2),
+round(average_years,2)
+]
+
+})
+
+print(kpis)
+
+department_analysis = (
+
+df
+
+.groupby("Department")
+
+.agg(
+
+Employees=("EmployeeNumber","count"),
+
+Attrition=("Attrition_Num","sum"),
+
+AverageIncome=("MonthlyIncome","mean"),
+
+AverageSatisfaction=("JobSatisfaction","mean")
+
+)
+
+.reset_index()
+
+)
+
+department_analysis["Attrition Rate"] = (
+
+department_analysis["Attrition"]
+
+/
+
+department_analysis["Employees"]
+
+*100
+
+).round(2)
+
+jobrole_analysis = (
+
+df
+
+.groupby("JobRole")
+
+.agg(
+
+Employees=("EmployeeNumber","count"),
+
+Attrition=("Attrition_Num","sum"),
+
+AverageIncome=("MonthlyIncome","mean"),
+
+AverageSatisfaction=("JobSatisfaction","mean")
+
+)
+
+.reset_index()
+
+)
+
+jobrole_analysis["Attrition Rate"] = (
+
+jobrole_analysis["Attrition"]
+
+/
+
+jobrole_analysis["Employees"]
+
+*100
+
+).round(2)
+
+gender_analysis = (
+
+df
+
+.groupby("Gender")
+
+.agg(
+
+Employees=("EmployeeNumber","count"),
+
+Attrition=("Attrition_Num","sum")
+
+)
+
+.reset_index()
+
+)
+
+gender_analysis["Attrition Rate"] = (
+
+gender_analysis["Attrition"]
+
+/
+
+gender_analysis["Employees"]
+
+*100
+
+).round(2)
+
+overtime_analysis = (
+
+df
+
+.groupby("OverTime")
+
+.agg(
+
+Employees=("EmployeeNumber","count"),
+
+Attrition=("Attrition_Num","sum")
+
+)
+
+.reset_index()
+
+)
+
+overtime_analysis["Attrition Rate"] = (
+
+overtime_analysis["Attrition"]
+
+/
+
+overtime_analysis["Employees"]
+
+*100
+
+).round(2)
+
+relationship_analysis = pd.DataFrame({
+
+"Relationship":[
+
+"Overtime vs Attrition",
+
+"Income vs Attrition",
+
+"Job Satisfaction vs Attrition",
+
+"Distance From Home vs Attrition",
+
+"Age vs Attrition"
+
+],
+
+"Correlation":[
+
+df["Attrition_Num"].corr((df["OverTime"]=="Yes").astype(int)),
+
+df["Attrition_Num"].corr(df["MonthlyIncome"]),
+
+df["Attrition_Num"].corr(df["JobSatisfaction"]),
+
+df["Attrition_Num"].corr(df["DistanceFromHome"]),
+
+df["Attrition_Num"].corr(df["Age"])
+
+]
+
+})
+
+with pd.ExcelWriter(OUTPUT_FILE) as writer:
+
+    kpis.to_excel(writer,
+                  sheet_name="Executive_KPIs",
+                  index=False)
+
+    department_analysis.to_excel(writer,
+                                 sheet_name="Department_Analysis",
+                                 index=False)
+
+    jobrole_analysis.to_excel(writer,
+                              sheet_name="JobRole_Analysis",
+                              index=False)
+
+    overtime_analysis.to_excel(writer,
+                               sheet_name="Overtime_Analysis",
+                               index=False)
+
+    gender_analysis.to_excel(writer,
+                             sheet_name="Gender_Analysis",
+                             index=False)
+
+    relationship_analysis.to_excel(writer,
+                                   sheet_name="Relationship_Analysis",
+                                   index=False)
+
+    df.to_excel(writer,
+                sheet_name="Full_Clean_Data",
+                index=False)
+
+print("=" * 60)
+print("DASHBOARD DATA EXPORTED SUCCESSFULLY")
+print("=" * 60)
+print(OUTPUT_FILE)

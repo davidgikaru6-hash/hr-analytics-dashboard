@@ -1,0 +1,106 @@
+from pathlib import Path
+import pandas as pd
+
+# ==========================================================
+# PROJECT PATHS
+# ==========================================================
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+RAW_DATA = (
+    BASE_DIR /
+    "01 Raw Data" /
+    "HR Analytics project.csv"
+)
+
+CLEAN_DATA = (
+    BASE_DIR /
+    "02 Cleaned Data" /
+    "HR Analytics_Cleaned.csv"
+)
+
+# ==========================================================
+# LOAD DATA
+# ==========================================================
+
+print("=" * 60)
+print("HR ANALYTICS - DATA CLEANING")
+print("=" * 60)
+
+df = pd.read_csv(RAW_DATA)
+
+print(f"\nOriginal Shape : {df.shape[0]} rows × {df.shape[1]} columns")
+
+# ==========================================================
+# REMOVE SINGLE-VALUE COLUMNS
+# ==========================================================
+
+columns_to_remove = [
+    "EmployeeCount",
+    "Over18",
+    "StandardHours"
+]
+
+df.drop(columns=columns_to_remove, inplace=True)
+
+print("\nRemoved Columns:")
+for column in columns_to_remove:
+    print(f"  ✓ {column}")
+
+# ==========================================================
+# CREATE NUMERIC ATTRITION COLUMN
+# ==========================================================
+
+df["Attrition_Num"] = (
+    df["Attrition"]
+    .map({"No": 0, "Yes": 1})
+)
+
+print("\nCreated Column:")
+print("  ✓ Attrition_Num (No = 0, Yes = 1)")
+
+# ==========================================================
+# CREATE OUTPUT FOLDER IF IT DOESN'T EXIST
+# ==========================================================
+
+CLEAN_DATA.parent.mkdir(parents=True, exist_ok=True)
+
+# ==========================================================
+# SAVE CLEAN DATASET
+# ==========================================================
+
+df.to_csv(CLEAN_DATA, index=False)
+
+# ==========================================================
+# CLEANING SUMMARY
+# ==========================================================
+
+print("\n" + "=" * 60)
+print("CLEANING COMPLETE")
+print("=" * 60)
+
+print(f"Rows Remaining      : {df.shape[0]:,}")
+print(f"Columns Remaining   : {df.shape[1]}")
+
+print(f"\nClean Dataset Saved:")
+print(CLEAN_DATA)
+
+print(f"\nOverall Attrition Rate: {df['Attrition_Num'].mean() * 100:.2f}%")
+
+print("\nDataset is ready for business analysis.")
+
+# ==========================================================
+# FINAL QUALITY INSPECTION
+# ==========================================================
+
+from data_quality_inspector import inspect
+
+print("\n" + "=" * 60)
+print("FINAL QUALITY INSPECTION")
+print("=" * 60)
+
+# Reload the cleaned dataset
+clean_df = pd.read_csv(CLEAN_DATA)
+
+# Run the inspector
+inspect(clean_df)
