@@ -1,56 +1,108 @@
-Folder	Description
-02 Cleaned Data/	Validated cleaned HR dataset
-03 Python/	Python scripts for inspection, cleaning, analysis, and relationship analysis
-04 Dashboard Data/	Prepared Excel data used during dashboard development
-05 Excel Dashboard/	Final Excel dashboard
-Skills Demonstrated
+# HR Analytics Dashboard
+
+End-to-end HR analytics project using Python and Excel to analyze employee attrition, workforce characteristics, and potential retention drivers.
+
+## Project Overview
+
+This project analyzes employee attrition across a 1,470-employee workforce.
+
+The objective was to transform employee-level HR data into a validated analytical dataset, calculate business KPIs, identify attrition patterns, and build an interactive Excel dashboard for decision-making.
+
+## Business Questions
+
+- What is the overall employee attrition rate?
+- Which departments have the highest attrition?
+- Which job roles have the highest attrition?
+- Is overtime associated with higher attrition?
+- How does monthly income differ between employees who leave and those who stay?
+- Does job satisfaction differ between employees who leave and those who stay?
+
+## Key Findings
+
+- Overall attrition rate: 16.12%
+- Sales has the highest department attrition at approximately 20.63%.
+- Employees working overtime have substantially higher attrition than employees who do not.
+- Employees who left have lower average monthly income than employees who stayed.
+- Employees who left also show lower average job satisfaction.
+
+## Project Workflow
+
+Raw HR Data
+↓
 Data Quality Inspection
+↓
 Data Cleaning with Python
-pandas
-KPI Development
-Exploratory Data Analysis
-Relationship Analysis
-Excel PivotTables
-Excel PivotCharts
-Interactive Dashboard Design
-Data Visualization
-Business Storytelling
-Executive Reporting
-Quality Assurance
-Tools Used
-Python
-pandas
-Microsoft Excel
-PivotTables
-PivotCharts
-Git
-GitHub
-AI-assisted analytics workflow
-How to Use
-Download the final Excel dashboard from the 05 Excel Dashboard/ folder.
-Open the workbook in Microsoft Excel.
-Navigate to the Dashboard sheet.
-Use the available slicers to filter the dashboard.
-Review the charts and KPI cards to understand workforce and attrition patterns.
-Business Questions Explored
+↓
+Final Data Validation
+↓
+KPI & Relationship Analysis
+↓
+Dashboard Data Preparation
+↓
+Interactive Excel Dashboard
+↓
+Business Insights
 
-This project was designed to answer questions such as:
+## Tools Used
 
-What is the overall employee attrition rate?
-Which departments experience the highest attrition?
-Which job roles have the highest attrition?
-Does overtime relate to higher employee attrition?
-How does monthly income differ between employees who leave and those who stay?
-Does job satisfaction differ between employees who leave and those who stay?
-Project Outcome
+- Python
+- pandas
+- Excel
+- PivotTables
+- PivotCharts
+- Excel Slicers
+- Git
+- GitHub
+- AI-assisted analysis and workflow support
 
-The project demonstrates an end-to-end approach to transforming raw HR data into a validated, business-focused analytics solution.
+## Repository Structure
 
-Rather than focusing only on charts, the workflow connects:
+| Folder | Purpose |
+|---|---|
+| `02 Cleaned Data` | Validated cleaned HR dataset |
+| `03 Python` | Python scripts for inspection, cleaning, validation and analysis |
+| `04 Dashboard Data` | Data prepared for dashboard development |
+| `06 Excel Dashboard` | Final interactive Excel dashboard |
 
-Data Quality → Python Analysis → KPI Development → Business Insights → Excel Dashboard → Quality Assurance
+## Dashboard
 
-Prepared by: David Gikaru
-Role: Aspiring BI Analyst / Data Consultant
-Project Date: August 2026
+![HR Analytics Dashboard](HR_Analytics_Dashboard.png)
+
+The dashboard contains:
+
+- KPI cards
+- Attrition analysis by department
+- Attrition analysis by job role
+- Attrition analysis by overtime
+- Monthly income comparison
+- Job satisfaction comparison
+- Interactive department filtering
+
+## Skills Demonstrated
+
+- Data quality inspection
+- Data cleaning
+- Python/pandas
+- KPI development
+- Exploratory data analysis
+- Relationship analysis
+- Excel PivotTables
+- Excel PivotCharts
+- Interactive dashboard development
+- Business storytelling
+- Git/GitHub
+
+## How to Use
+
+1. Open the `06 Excel Dashboard` folder.
+2. Download the final Excel workbook.
+3. Open the workbook in Microsoft Excel.
+4. Use the available slicers to explore the dashboard.
+5. Review the charts and KPI cards to understand workforce attrition patterns.
+
+## Project Outcome
+
+The project demonstrates an end-to-end BI workflow:
+
+**Data → Validation → Analysis → Visualization → Business Insight**
 
